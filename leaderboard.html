@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Poppins, sans-serif;
+    background: #0d0d0d;
+    background-image: repeating-linear-gradient(
+      45deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+    color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    font-size: 2.4em;
+    margin-bottom: 20px;
+    color: #ffcb42;
+    letter-spacing: 1px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 70%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(255, 203, 66, 0.2);
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 14px 20px;
+    text-align: center;
+  }
+
+  th {
+    background: #ffcb42;
+    color: #111;
+    font-weight: 700;
+  }
+
+  tr:nth-child(even) {
+    background: #151515;
+  }
+
+  tr:hover {
+    background: #242424;
+    transition: 0.3s ease;
+  }
+
+  td {
+    color: #f2f2f2;
+  }
+
+  .back-btn {
+    margin-top: 25px;
+    background: #ffcb42;
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .back-btn:hover {
+    background: #ffb700;
+    transform: scale(1.05);
+  }
+
+  .empty {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 1.1em;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Leaderboard</h1>
+  <table id="leaderboard">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Time (s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- filled dynamically -->
+    </tbody>
+  </table>
+  <p class="empty" id="empty-msg" style="display:none;">No records yet 😔</p>
+  <button class="back-btn" onclick="window.location.href='button.html'">Back to Start</button>
+
+<script>
+  // Fetch leaderboard data from localStorage
+  const leaderboardData = JSON.parse(localStorage.getItem("leaderboardData") || "[]");
+
+  const tbody = document.querySelector("#leaderboard tbody");
+  const emptyMsg = document.getElementById("empty-msg");
+
+  function renderLeaderboard() {
+    tbody.innerHTML = "";
+    if (leaderboardData.length === 0) {
+      emptyMsg.style.display = "block";
+      return;
+    }
+
+    emptyMsg.style.display = "none";
+
+    function formatTime(seconds){
+        const m = Math.floor(seconds/60);
+        const s = Math.floor(seconds%60);
+        const ms = Math.floor((seconds - Math.floor(seconds))*100);
+        return `${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}.${ms.toString().padStart(2,"0")}`;
+    }
+
+    // sort ascending by time
+    leaderboardData.sort((a,b)=>a.time-b.time);
+
+    leaderboardData.forEach((entry, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${entry.name}</td>
+            <td>${formatTime(entry.time)}</td>
+        `;
+        tbody.appendChild(row);
+        });
+    }
+
+    renderLeaderboard();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,415 @@
+/* ==========================================================
+// 🧩 VARIABLES
+   ========================================================== */
+:root {
+  --bg: #0f0f12;
+  --white: #fff;
+  --white-border: #222;
+  --black: #070707;
+  --accent-white: #e4a700;
+  --accent-black: #ffc74f;
+  --typed-grey: #555;
+  --correct: #00ff88;
+  --wrong: #ff4444;
+  --heading-float-duration: 8s;
+  --heading-translate-x: 10px;
+  --heading-translate-y: 8px;
+  --heading-rotate-deg: 3deg;
+}
+
+
+/* ==========================================================
+   💻 BODY
+   ========================================================== */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0f0f12;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  color: var(--white);
+  font-family: "Compass", monospace;
+  padding: 20px;
+  overflow: hidden;
+}
+
+
+/* ==========================================================
+   📄 HEADING
+   ========================================================== */
+h1 {
+  margin: 12px 0;
+  margin-top: 50px;
+  font-weight: 600;
+  font-size: 50px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 1);
+  display: inline-block;
+  transform-origin: center center;
+  will-change: transform;
+  animation: headingFloat var(--heading-float-duration) ease-in-out infinite;
+}
+
+
+/* ==========================================================
+   🎹 KEYBOARD SECTION
+   ========================================================== */
+.keyboard {
+  position: relative;
+  margin-top: 400px; /* pushes keyboard down so word-box appears above */
+  height: 150.3px;
+  background: transparent;
+  overflow-x: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* --- ⬜ White Keys --- */
+.white-key {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid var(--white-border);
+  border-radius: 0 0 6px 6px;
+  vertical-align: bottom;
+  user-select: none;
+  box-shadow: inset 0 -6px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.08s, transform 0.08s;
+  width: 28px;
+  height: 150px;
+}
+
+.white-key.active {
+  background: var(--accent-white);
+  transform: translateY(2px);
+}
+
+.white-key-label {
+  position: absolute;
+  bottom: 4px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: black;
+  pointer-events: none;
+}
+
+/* --- ⬛ Black Keys --- */
+.black-key {
+  position: absolute;
+  background: var(--black);
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  transition: background 0.08s, transform 0.08s;
+  width: 18px;
+  height: 96px;
+  color: white;
+  text-align: center;
+  line-height: 96px;
+  font-size: 12px;
+  user-select: none;
+}
+
+.black-key.active {
+  background: var(--accent-black);
+  transform: translateY(2px);
+}
+
+
+/* ==========================================================
+   🔤 TYPED LETTER DISPLAY
+   ========================================================== */
+.typed-letter {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-top: 12px;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.typed-letter.show {
+  opacity: 1;
+}
+
+
+/* ==========================================================
+   💬 WORDBOX (Typing Area)
+   ========================================================== */
+.word-box {
+  font-family: monospace;
+  font-size: 38px;
+  background: #111;
+  padding: 12px 16px;
+  border-radius: 6px;
+  min-width: 700px;
+  height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+  margin: 20px auto 0 auto;
+  box-shadow: 0 0 20px rgba(255, 203, 66, 0.4);
+  margin-top: -395px; /* centers horizontally and adds spacing below heading */
+}
+
+/* --- Pending Letters --- */
+.word-box span {
+  color: var(--typed-grey);
+  user-select: none;
+}
+
+/* --- Correct & Wrong Letters --- */
+.word-box .correct {
+  color: var(--correct);
+  text-shadow: 0 0 20px rgba(0, 255, 0, 1);
+}
+
+.word-box .wrong {
+  color: var(--wrong);
+  text-shadow: 0 0 20px rgba(255, 0, 0, 2);
+}
+
+
+/* ==========================================================
+   ⌨️ CURSOR
+   ========================================================== */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.322);
+  animation: blink 2s steps(1) infinite;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+
+/* ==========================================================
+   ⏱️ STOPWATCH
+   ========================================================== */
+#timer {
+  display: inline-block;
+  font-family: "Consolas", monospace;
+  font-size: 40px;
+  color: var(--white);
+  margin-top: 50px;
+  margin-left: 20px;
+  min-width: 60px;
+  text-align: center;
+}
+
+
+/* ==========================================================
+   💻 POPUP OVERLAY (Dimmed Background)
+   ========================================================== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Hide popup by default */
+.popup-overlay.hidden {
+  display: none;
+}
+
+
+/* ==========================================================
+   📝 POPUP BOX (Main Popup Window)
+   ========================================================== */
+.popup-box {
+  background: #111;
+  color: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  min-width: 320px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Popup Heading --- */
+.popup-box h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* --- Popup Body --- */
+.popup-box p {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* --- Popup Input --- */
+.popup-box input[type="text"] {
+  width: 80%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  outline: none;
+}
+
+/* --- Popup Button --- */
+.popup-box button {
+  background: #ffae00;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.popup-box button:hover {
+  background: #b97f00;
+  box-shadow: 0 0 20px rgba(255, 203, 66, 0.3);
+}
+
+
+/* ==========================================================
+   📝 NAME POPUP (Registration Box)
+   ========================================================== */
+#namePopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+#namePopup h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#namePopup p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+#namePopup input[type="text"] {
+  font-size: 18px;
+  padding: 6px 10px;
+  width: 220px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #222;
+  color: #fff;
+  outline: none;
+  margin-top: 8px;
+}
+
+#namePopup input[type="text"]::placeholder {
+  color: #888;
+}
+
+#namePopup input[type="text"]:focus {
+  border-color: #ffae00;
+}
+
+#namePopup button {
+  margin-top: 12px;
+  margin-left: 13px;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #ffae00;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+#namePopup button:hover {
+  background: #a87300;
+}
+
+
+/* ==========================================================
+   ⏯️ ANIMATIONS
+   ========================================================== */
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+/* ---------- HEADING GLIDE ANIMATION ---------- */
+@keyframes headingFloat {
+  0% {
+    transform: translate3d(0px, 0px, 0) rotate(0deg);
+  }
+  16% {
+    transform: translate3d(calc(var(--heading-translate-x) * 0.6), calc(var(--heading-translate-y) * -0.6), 0) rotate(calc(var(--heading-rotate-deg) * 0.6));
+  }
+  33% {
+    transform: translate3d(calc(var(--heading-translate-x) * -1), calc(var(--heading-translate-y) * 0.4), 0) rotate(calc(var(--heading-rotate-deg) * -0.8));
+  }
+  50% {
+    transform: translate3d(0px, calc(var(--heading-translate-y) * 1), 0) rotate(calc(var(--heading-rotate-deg) * 0.3));
+  }
+  66% {
+    transform: translate3d(calc(var(--heading-translate-x) * 0.7), calc(var(--heading-translate-y) * -0.5), 0) rotate(calc(var(--heading-rotate-deg) * -0.4));
+  }
+  83% {
+    transform: translate3d(calc(var(--heading-translate-x) * -0.4), calc(var(--heading-translate-y) * 0.6), 0) rotate(calc(var(--heading-rotate-deg) * 0.7));
+  }
+  100% {
+    transform: translate3d(0px, 0px, 0) rotate(0deg);
+  }
+}
+
+/* ---------- WORDBOX PUNCH ANIMATION ---------- */
+@keyframes punch {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.word-box.punch {
+  animation: punch 0.2s ease;
+}
+
+/* ---------- WORDBOX SHAKE ANIMATION ---------- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.word-box.shake {
+  animation: shake 0.15s ease;
+  animation-iteration-count: 10; /* lasts ~1.5s */
+}
+
+

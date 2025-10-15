@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Page</title>
+<style>
+:root{
+  --bg: #0f0f12;
+  --accent: #ffcb42;
+  --accent-hover: #b68200;
+  --white: #fff;
+  --font: 'Inter', Arial, sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--white);
+    background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.start-btn{
+  background: var(--accent);
+  color: #705600;
+  padding: 48px 96px;
+  font-size: 4rem;
+  font-family: consolas;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 0 20px rgba(255, 203, 66, 0.5);
+}
+
+.start-btn:hover{
+  background: var(--accent-hover);
+  color: #ffd036;
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<button class="start-btn" onclick="startGame()">START</button>
+
+<script>
+function startGame(){
+  window.location.href = "keyboard.html";
+}
+
+window.clearLeaderboard = function () {
+  localStorage.removeItem("leaderboardData")
+  console.log("%c✅ Leaderboard cleared successfully.", "color: lime; font-weight: bold;")
+}
+</script>
+
+</body>
+</html>
